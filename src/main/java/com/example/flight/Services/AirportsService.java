@@ -3,6 +3,7 @@ package com.example.flight.Services;
 import com.example.flight.Models.Airports;
 import com.example.flight.Repositories.AirportsRepository;
 import jakarta.ws.rs.NotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,31 @@ public class AirportsService {
             throw new NotFoundException();
         }
         return airport.get().toString();
+    }
+    public Airports GetAirport(Long id){
+        Optional<Airports> airport = airportsRepository.findById(id);
+        if(airport.isEmpty()){
+            throw new NotFoundException();
+        }
+        return airport.get();
+    }
+    public String Update(Airports newAirport, Long id){
+        Optional<Airports> airport = airportsRepository.findById(id);
+        if(airport.isEmpty()){
+            throw new NotFoundException();
+        }
+        Airports oldAirport = airport.get();
+
+        BeanUtils.copyProperties(newAirport, oldAirport, "id");
+        airportsRepository.save(oldAirport);
+        return oldAirport.toString();
+    }
+    public String Delete(Long id){
+        if(!airportsRepository.existsById(id)){
+            throw new NotFoundException();
+        }
+        airportsRepository.deleteById(id);
+
+        return "Deleted airport";
     }
 }
