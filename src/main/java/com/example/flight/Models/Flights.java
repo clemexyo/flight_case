@@ -30,4 +30,16 @@ public class Flights {
     @Column
     private Long price;
 
+    public Flights(Airports departureAirport, Airports arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime, Long price) {
+        this.departureAirport = departureAirport;
+        this.arrivalAirport = arrivalAirport;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.price = price;
+    }
+    @Override
+    public String toString(){
+        return "Flight details: [" + "departure: " + this.departureAirport + " at: " + this.departureTime +
+                ", arrival: " + this.arrivalAirport + " at: " + this.arrivalTime + ", price: " + this.price + "]";
+    }
 }
