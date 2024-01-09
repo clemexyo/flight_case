@@ -10,4 +10,5 @@ public class FlightApplication {
 		SpringApplication.run(FlightApplication.class, args);
 	}
 
+
 }
