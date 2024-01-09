@@ -5,10 +5,12 @@ import com.example.flight.Requests.CreateFlightRequest;
 import com.example.flight.Services.FlightsService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -61,5 +63,25 @@ public class FlightsController {
     public ResponseEntity<String> Delete(@PathVariable Long id){
         String deleted = flightsService.Delete(id);
         return new ResponseEntity<>(deleted, HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/flight-search")
+    public ResponseEntity<List<String>> SearchFlight(
+            @RequestParam("departureCity") String departureCity,
+            @RequestParam("arrivalCity") String arrivalCity,
+            @RequestParam("departureDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime departureDateTime,
+            @RequestParam(value = "returnDateTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime returnDateTime
+    ){
+        List<String> flights;
+
+        if (returnDateTime != null) {
+            // Two-way flight
+            flights = flightsService.TwoWayFlight(departureCity, arrivalCity, departureDateTime, returnDateTime);
+                    //flightRepository.findByDepartureAirportCityAndArrivalAirportCityAndDepartureDateTimeAndReturnDateTime(
+                    //departureCity, arrivalCity, departureDateTime, returnDateTime);
+        } else {
+            // One-way flight
+            flights = flightsService.OneWayFlight(departureCity, arrivalCity, departureDateTime);
+        }
+        return new ResponseEntity<>(flights, HttpStatus.OK);
     }
 }

@@ -62,4 +62,24 @@ public class FlightsService {
 
         return "Deleted flight\n";
     }
+
+    public List<String> TwoWayFlight(String departureCity, String arrivalCity, LocalDateTime departureDateTime, LocalDateTime returnDateTime) {
+        List<Flights> flightsList = flightsRepository.findByDepartureAirportCityAndArrivalAirportCityAndDepartureTimeAndArrivalTime(
+                departureCity, arrivalCity, departureDateTime, returnDateTime);
+        List<String> flightsStringList = new ArrayList<String>();
+        for (Flights currentFlight : flightsList) {
+            flightsStringList.add(currentFlight.toString());
+        }
+        return flightsStringList;
+    }
+
+    public List<String> OneWayFlight(String departureCity, String arrivalCity, LocalDateTime departureDateTime) {
+        List<Flights> flightsList = flightsRepository.findByDepartureAirportCityAndArrivalAirportCityAndDepartureTime(
+                departureCity, arrivalCity, departureDateTime);
+        List<String> flightsStringList = new ArrayList<String>();
+        for (Flights currentFlight : flightsList) {
+            flightsStringList.add(currentFlight.toString());
+        }
+        return flightsStringList;
+    }
 }
